@@ -1,0 +1,40 @@
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User settings
+xcuserdata/
+
+## Scripts
+*.focus
+*.vsp
+
+## Dependency Manager
+Pods/
+Carthage/Build/
+.build/
+
+## AppCode
+.idea/
+
+## Build results
+build/
+DerivedData/
+
+## Results from code analysis
+*.gcno
+
+## Playgrounds
+*.playground
+
+## Miscellaneous
+*.swp
+*.lock
+.DS_Store
+profile
+DerivedData/
+.xcworkspace/xcuserdata/
+.xcworkspace/xcshareddata/SwiftPM/Package.resolved
+.xcodeproj/xcuserdata/
+.xcodeproj/project.xcworkspace/xcuserdata/
+.xcodeproj/project.xcworkspace/xcshareddata/SwiftPM/Package.resolved

@@ -1,0 +1,84 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		ExpenseTrackerApp.swift in Sources = {isa = PBXBuildFile; };
+		ContentView.swift in Sources = {isa = PBXBuildFile; };
+		DashboardView.swift in Sources = {isa = PBXBuildFile; };
+		ExpenseListView.swift in Sources = {isa = PBXBuildFile; };
+		AddExpenseView.swift in Sources = {isa = PBXBuildFile; };
+		BudgetView.swift in Sources = {isa = PBXBuildFile; };
+		CategoryChartView.swift in Sources = {isa = PBXBuildFile; };
+		Expense.swift in Sources = {isa = PBXBuildFile; };
+		Category.swift in Sources = {isa = PBXBuildFile; };
+		Budget.swift in Sources = {isa = PBXBuildFile; };
+		Theme.swift in Sources = {isa = PBXBuildFile; };
+		DateExtensions.swift in Sources = {isa = PBXBuildFile; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		ExpenseTracker.app = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExpenseTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		ExpenseTracker = {
+			isa = PBXGroup;
+			children = (
+				ExpenseTrackerApp.swift,
+				Views,
+				Models,
+				Utils,
+			);
+			path = ExpenseTracker;
+			sourceTree = "<group>";
+		};
+		Views = {
+			isa = PBXGroup;
+			children = (
+				ContentView.swift,
+				DashboardView.swift,
+				ExpenseListView.swift,
+				AddExpenseView.swift,
+				BudgetView.swift,
+				Components,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		Components = {
+			isa = PBXGroup;
+			children = (
+				CategoryChartView.swift,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		Models = {
+			isa = PBXGroup;
+			children = (
+				Expense.swift,
+				Category.swift,
+				Budget.swift,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		Utils = {
+			isa = PBXGroup;
+			children = (
+				Theme.swift,
+				DateExtensions.swift,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+	};
+	rootObject = {isa = PBXProject; };
+}
