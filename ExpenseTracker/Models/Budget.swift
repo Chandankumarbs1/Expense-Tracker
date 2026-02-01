@@ -29,11 +29,15 @@ final class Budget {
     
     // Helper to get current month's budget
     static func currentMonthBudget(from budgets: [Budget]) -> Budget? {
-        let calendar = Calendar.current
         let now = Date()
+        let calendar = Calendar.current
         let currentMonth = calendar.component(.month, from: now)
         let currentYear = calendar.component(.year, from: now)
-        
-        return budgets.first { $0.month == currentMonth && $0.year == currentYear }
+        return budget(for: currentMonth, year: currentYear, from: budgets)
+    }
+    
+    // Helper to get budget for a specific month and year
+    static func budget(for month: Int, year: Int, from budgets: [Budget]) -> Budget? {
+        return budgets.first { $0.month == month && $0.year == year }
     }
 }
