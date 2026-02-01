@@ -43,6 +43,12 @@ extension Date {
         return calendar.isDate(self, equalTo: Date(), toGranularity: .month)
     }
     
+    // Check if date is in the same month as another date
+    func isInMonth(as date: Date) -> Bool {
+        let calendar = Calendar.current
+        return calendar.isDate(self, equalTo: date, toGranularity: .month)
+    }
+    
     // Check if two dates are on the same day
     func isSameDay(as date: Date) -> Bool {
         Calendar.current.isDate(self, inSameDayAs: date)

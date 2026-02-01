@@ -141,12 +141,10 @@ struct ExpenseRow: View {
                     .font(Theme.Typography.headline)
                     .foregroundColor(Theme.Colors.primaryText)
                 
-                if !expense.notes.isEmpty {
-                    Text(expense.notes)
-                        .font(Theme.Typography.subheadline)
-                        .foregroundColor(Theme.Colors.secondaryText)
-                        .lineLimit(1)
-                }
+                Text(expense.date.formatted)
+                    .font(Theme.Typography.subheadline)
+                    .foregroundColor(Theme.Colors.secondaryText)
+                    .lineLimit(1)
             }
             
             Spacer()

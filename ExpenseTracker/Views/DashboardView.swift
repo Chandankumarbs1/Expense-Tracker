@@ -9,22 +9,26 @@ struct DashboardView: View {
     @EnvironmentObject private var themeManager: ThemeManager
     @State private var showingAddExpense = false
     @State private var showingSettings = false
+    @State private var selectedDate = Date()
     
-    var currentMonthExpenses: [Expense] {
-        expenses.filter { $0.date.isInCurrentMonth }
+    var filteredExpenses: [Expense] {
+        expenses.filter { $0.date.isInMonth(as: selectedDate) }
     }
     
-    var totalSpentThisMonth: Double {
-        currentMonthExpenses.reduce(0) { $0 + $1.amount }
+    var totalSpentInSelectedMonth: Double {
+        filteredExpenses.reduce(0) { $0 + $1.amount }
     }
     
-    var currentBudget: Budget? {
-        Budget.currentMonthBudget(from: budgets)
+    var selectedMonthBudget: Budget? {
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: selectedDate)
+        let year = calendar.component(.year, from: selectedDate)
+        return Budget.budget(for: month, year: year, from: budgets)
     }
     
     var budgetProgress: Double {
-        guard let budget = currentBudget, budget.amount > 0 else { return 0 }
-        return min(totalSpentThisMonth / budget.amount, 1.0)
+        guard let budget = selectedMonthBudget, budget.amount > 0 else { return 0 }
+        return min(totalSpentInSelectedMonth / budget.amount, 1.0)
     }
     
     var recentExpenses: [Expense] {
@@ -39,15 +43,55 @@ struct DashboardView: View {
                 ScrollView {
                     VStack(spacing: Theme.Spacing.lg) {
                         // Header
-                        HStack(alignment: .bottom) {
+                        HStack(alignment: .center) {
                             VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                                 Text("Overview")
                                     .font(Theme.Typography.headline)
                                     .foregroundColor(Theme.Colors.secondaryText)
                                 
-                                Text(Date().monthYear)
-                                    .font(Theme.Typography.largeTitle)
-                                    .foregroundColor(Theme.Colors.primaryText)
+                                HStack(spacing: Theme.Spacing.md) {
+                                    Text(selectedDate.monthYear)
+                                        .font(Theme.Typography.largeTitle)
+                                        .foregroundColor(Theme.Colors.primaryText)
+                                    
+                                    HStack(spacing: Theme.Spacing.sm) {
+                                        Button {
+                                            changeMonth(by: -1)
+                                        } label: {
+                                            Image(systemName: "chevron.left")
+                                                .font(.headline)
+                                                .foregroundColor(Theme.Colors.primary)
+                                                .padding(8)
+                                                .background(Theme.Colors.secondaryBackground)
+                                                .clipShape(Circle())
+                                        }
+                                        
+                                        Button {
+                                            changeMonth(by: 1)
+                                        } label: {
+                                            Image(systemName: "chevron.right")
+                                                .font(.headline)
+                                                .foregroundColor(Theme.Colors.primary)
+                                                .padding(8)
+                                                .background(Theme.Colors.secondaryBackground)
+                                                .clipShape(Circle())
+                                        }
+                                        
+                                        if !selectedDate.isInCurrentMonth {
+                                            Button {
+                                                selectedDate = Date()
+                                            } label: {
+                                                Text("Today")
+                                                    .font(Theme.Typography.caption)
+                                                    .foregroundColor(Theme.Colors.primary)
+                                                    .padding(.horizontal, 8)
+                                                    .padding(.vertical, 4)
+                                                    .background(Theme.Colors.primary.opacity(0.1))
+                                                    .cornerRadius(Theme.CornerRadius.sm)
+                                            }
+                                        }
+                                    }
+                                }
                             }
                             
                             Spacer()
@@ -68,21 +112,22 @@ struct DashboardView: View {
                         
                         // Spending Summary Card
                         SpendingSummaryCard(
-                            totalSpent: totalSpentThisMonth,
-                            budget: currentBudget?.amount,
-                            progress: budgetProgress
+                            totalSpent: totalSpentInSelectedMonth,
+                            budget: selectedMonthBudget?.amount,
+                            progress: budgetProgress,
+                            isCurrentMonth: selectedDate.isInCurrentMonth
                         )
                         .padding(.horizontal, Theme.Spacing.lg)
                         
                         // Category Breakdown
-                        if !currentMonthExpenses.isEmpty {
+                        if !filteredExpenses.isEmpty {
                             VStack(alignment: .leading, spacing: Theme.Spacing.md) {
                                 Text("Spending by Category")
                                     .font(Theme.Typography.title3)
                                     .foregroundColor(Theme.Colors.primaryText)
                                     .padding(.horizontal, Theme.Spacing.lg)
                                 
-                                CategoryChartView(expenses: currentMonthExpenses)
+                                CategoryChartView(expenses: filteredExpenses)
                                     .padding(.horizontal, Theme.Spacing.lg)
                             }
                         }
@@ -135,6 +180,12 @@ struct DashboardView: View {
                 SettingsView()
                     .environmentObject(themeManager)
             }
+        }
+    }
+    
+    private func changeMonth(by value: Int) {
+        if let newDate = Calendar.current.date(byAdding: .month, value: value, to: selectedDate) {
+            selectedDate = newDate
         }
     }
 }
@@ -200,6 +251,7 @@ struct SpendingSummaryCard: View {
     let totalSpent: Double
     let budget: Double?
     let progress: Double
+    let isCurrentMonth: Bool
     
     var formattedSpent: String {
         let formatter = NumberFormatter()
@@ -232,7 +284,7 @@ struct SpendingSummaryCard: View {
             // Spend & Budget Info
             HStack {
                 VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-                    Text("Spent this month")
+                    Text(isCurrentMonth ? "Spent this month" : "Spent in period")
                         .font(Theme.Typography.caption)
                         .foregroundColor(Theme.Colors.secondaryText)
                         .textCase(.uppercase)
